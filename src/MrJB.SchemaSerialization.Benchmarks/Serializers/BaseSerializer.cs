@@ -10,4 +10,13 @@ public abstract class BaseSerializer
         EmailAddress = "noreply@mrjamiebowman.com",
         PhoneNumber = "11234567"
     };
+
+
+    public CustomerMetadata CustomerMetadata1 = new CustomerMetadata
+    {
+        FirstName = "Jamie",
+        LastName = "Bowman",
+        EmailAddress = "noreply@mrjamiebowman.com",
+        PhoneNumber = "11234567"
+    };
 }

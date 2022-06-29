@@ -1,11 +1,12 @@
 ﻿using BenchmarkDotNet.Attributes;
 using MrJB.SchemaSerialization.Benchmarks.Attributes;
+using MrJB.SchemaSerialization.Benchmarks.Bases;
 using MrJB.SchemaSerialization.Benchmarks.Helpers;
 using MrJB.SchemaSerialization.Benchmarks.Models;
 
-namespace MrJB.SchemaSerialization.Benchmarks.Serializers;
+namespace MrJB.SchemaSerialization.Benchmarks;
 
-public class Reflection : BaseSerializer
+public class ReflectionBenchmarks : BaseSerializer
 {
     //[BenchmarkCategory(Categories.Reflection)]
     //[Benchmark(Description = "Set Attribute Values")]

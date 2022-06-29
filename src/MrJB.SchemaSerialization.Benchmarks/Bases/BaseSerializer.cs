@@ -9,6 +9,9 @@ public abstract class BaseSerializer
     {
         // load avro schema
         CustomerSchema = LoadAvroSchema();
+
+        // AvroConvert
+        _avroCustomerSchemaBytes = File.ReadAllBytes("Avro/customer.data");
     }
 
     #region Models 
@@ -34,6 +37,9 @@ public abstract class BaseSerializer
     #region Apache Avro
 
     public Schema CustomerSchema;
+
+    // AvroConvert
+    public Byte[] _avroCustomerSchemaBytes;
     
     public Schema LoadAvroSchema()
     {

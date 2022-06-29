@@ -9,12 +9,16 @@
 
   <ItemGroup>
     <PackageReference Include="Apache.Avro" Version="1.11.0" />
+    <PackageReference Include="AvroConvert" Version="3.2.9" />
     <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Avro\customer.avro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Avro\customer.data">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

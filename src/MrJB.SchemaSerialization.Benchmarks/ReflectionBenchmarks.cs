@@ -8,11 +8,18 @@ namespace MrJB.SchemaSerialization.Benchmarks;
 
 public class ReflectionBenchmarks : BaseSerializer
 {
-    //[BenchmarkCategory(Categories.Reflection)]
-    //[Benchmark(Description = "Set Attribute Values")]
-    //public void SetAttributeValues()
-    //{
-    //}
+    [BenchmarkCategory(Categories.Reflection)]
+    [Benchmark(Description = "Set Attribute Values")]
+    public void SetAttributeValues()
+    {
+        // event bus (attribute values)
+        AttributeHelper.SetPropertyAttributeValue<Customer, string?, EventBusAttribute>(CustomerMetadata1, attr => attr.ReplyTo);
+        AttributeHelper.SetPropertyAttributeValue<Customer, string?, EventBusAttribute>(CustomerMetadata1, attr => attr.ReplyToSessionId);
+
+        // app insight (attribute values)
+        AttributeHelper.SetPropertyAttributeValue<Customer, string?, AppInsightsAttribute>(CustomerMetadata1, attr => attr.OperationId);
+        AttributeHelper.SetPropertyAttributeValue<Customer, string?, AppInsightsAttribute>(CustomerMetadata1, attr => attr.ParentId);
+    }
 
     [BenchmarkCategory(Categories.Reflection)]
     [Benchmark(Description = "Read Attribute Values")]

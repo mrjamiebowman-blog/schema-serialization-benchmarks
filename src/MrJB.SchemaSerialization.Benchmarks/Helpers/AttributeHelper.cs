@@ -18,4 +18,16 @@ public static class AttributeHelper
         var value = propertyInfo.GetValue(attr, null);
         return value != null ? (TOut)value :  default(TOut);
     }
+
+    public static void SetPropertyAttributeValue<T, TIn, TAttribute>(
+        T obj,
+        Expression<Func<TAttribute, TIn>> propertyExpression
+        )
+        where T : class
+        where TAttribute : Attribute
+    {
+        var attr = obj.GetType().GetCustomAttributes(typeof(TAttribute)).SingleOrDefault(x => x is TAttribute) as TAttribute;
+        var propertyInfo = ((MemberExpression)propertyExpression.Body).Member as PropertyInfo;
+        propertyInfo.SetValue(attr, null);
+    }
 }

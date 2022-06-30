@@ -1,8 +1,7 @@
-﻿using System.Text;
-using Avro;
-using Avro.Reflect;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
+using MrJB.SchemaSerialization.Benchmarks.Attributes;
 using MrJB.SchemaSerialization.Benchmarks.Bases;
+using MrJB.SchemaSerialization.Benchmarks.Helpers;
 using MrJB.SchemaSerialization.Benchmarks.Models;
 using SolTechnology.Avro;
 
@@ -11,7 +10,7 @@ namespace MrJB.SchemaSerialization.Benchmarks;
 /// <summary>
 /// Will benchmark on JSON/XML/Binary/Avro serializers.
 /// </summary>
-public class SerializerBenchmarks : BaseSerializer
+public class Benchmarks : BaseSerializer
 {
     /// <summary>
     /// JSON.NET Benchmark
@@ -31,6 +30,32 @@ public class SerializerBenchmarks : BaseSerializer
     public void SystemTextJson()
     {
         var json = System.Text.Json.JsonSerializer.Serialize(Customer1);
+    }
+
+    [BenchmarkCategory(Categories.Reflection)]
+    [Benchmark(Description = "Set Attribute Values")]
+    public void SetAttributeValues()
+    {
+        // event bus (attribute values)
+        AttributeHelper.SetPropertyAttributeValue<Customer, string?, EventBusAttribute>(CustomerMetadata1, attr => attr.ReplyTo);
+        AttributeHelper.SetPropertyAttributeValue<Customer, string?, EventBusAttribute>(CustomerMetadata1, attr => attr.ReplyToSessionId);
+
+        // app insight (attribute values)
+        AttributeHelper.SetPropertyAttributeValue<Customer, string?, AppInsightsAttribute>(CustomerMetadata1, attr => attr.OperationId);
+        AttributeHelper.SetPropertyAttributeValue<Customer, string?, AppInsightsAttribute>(CustomerMetadata1, attr => attr.ParentId);
+    }
+
+    [BenchmarkCategory(Categories.Reflection)]
+    [Benchmark(Description = "Read Attribute Values")]
+    public void ReadAttributeValues()
+    {
+        // event bus (attribute values)
+        var replyTo = AttributeHelper.GetPropertyAttributeValue<Customer, string?, EventBusAttribute>(CustomerMetadata1, attr => attr.ReplyTo);
+        var replyToSessionId = AttributeHelper.GetPropertyAttributeValue<Customer, string?, EventBusAttribute>(CustomerMetadata1, attr => attr.ReplyToSessionId);
+
+        // app insight (attribute values)
+        var operationId = AttributeHelper.GetPropertyAttributeValue<Customer, string?, AppInsightsAttribute>(CustomerMetadata1, attr => attr.OperationId);
+        var parentId = AttributeHelper.GetPropertyAttributeValue<Customer, string?, AppInsightsAttribute>(CustomerMetadata1, attr => attr.ParentId);
     }
 
     /// <summary>

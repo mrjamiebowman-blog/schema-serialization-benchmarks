@@ -1,4 +1,6 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using Avro.IO;
+using Avro.Reflect;
+using BenchmarkDotNet.Attributes;
 using MrJB.SchemaSerialization.Benchmarks.Attributes;
 using MrJB.SchemaSerialization.Benchmarks.Bases;
 using MrJB.SchemaSerialization.Benchmarks.Helpers;
@@ -78,28 +80,45 @@ public class Benchmarks : BaseSerializer
         var result = AvroConvert.Deserialize<Customer>(_avroCustomerSchemaBytes);
     }
 
-    ///// <summary>
-    ///// Avro Serialization
-    ///// </summary>
-    //[BenchmarkCategory(Categories.JsonSerializers)]
-    //[Benchmark(Description = "Avro Serialization")]
-    //public void AvroSerialize()
-    //{
-    //    var unionSchema = CustomerSchema as UnionSchema;
+    /// <summary>
+    /// Avro Serialization
+    /// </summary>
+    [BenchmarkCategory(Categories.JsonSerializers)]
+    [Benchmark(Description = "Avro Serialization")]
+    public void AvroSerialize()
+    {
+        // avro schema
+        var avroWriter = new ReflectWriter<Customer>(CustomerSchema);
 
-    //    var cache = new ClassCache();
-    //    cache.LoadClassCache(typeof(Customer), unionSchema[0]);
-    //}
+        using (var stream = new MemoryStream(256))
+        {
+            avroWriter.Write(Customer1, new BinaryEncoder(stream));
 
-    ///// <summary>
-    ///// Avro DeSerialization
-    ///// </summary>
-    //[BenchmarkCategory(Categories.JsonSerializers)]
-    //[Benchmark(Description = "Avro Deserialization")]
-    //public void AvroDeserialize()
-    //{
+            // used for deserialization.
+            string base64 = Convert.ToBase64String((stream.ToArray()));
+        }
+    }
 
-    //}
+    /// <summary>
+    /// Avro DeSerialization
+    /// </summary>
+    [BenchmarkCategory(Categories.JsonSerializers)]
+    [Benchmark(Description = "Avro Deserialization")]
+    public void AvroDeserialize()
+    {
+        // bytes
+        var encodedBytes = "AApKYW1pZQxCb3dtYW4ybm9yZXBseUBtcmphbWllYm93bWFuLmNvbRAxMTIzNDU2Nw==";
+        byte[] bytes = Convert.FromBase64String(encodedBytes);
+
+        // deserialize
+        var avroReader = new ReflectReader<Customer>(CustomerSchema, CustomerSchema);
+
+        using (var stream2 = new MemoryStream(bytes))
+        {
+            var deserialized = avroReader.Read(null, new BinaryDecoder(stream2));
+        }
+
+    }
 
     // TODO: data contracts
 
